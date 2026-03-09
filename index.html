@@ -27,18 +27,19 @@
     <section id="home" class="hero">
         <div class="hero-content">
             <div class="avatar">
-                <img src="https://via.placeholder.com/200" alt="Avatar">
+                <img src="me.JPG" alt="Avatar">
             </div>
             <h1>Nguyen Van Quoc Huynh</h1>
             <p class="subtitle">Information Technology Student</p>
             <p class="description">Passionate about programming and problem-solving</p>
             <div class="social-links">
-                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/QHuynh06"><i class="fab fa-github"></i></a>
                 <a href="#"><i class="fab fa-linkedin"></i></a>
                 <a href="#"><i class="fab fa-facebook"></i></a>
                 <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
-            <a href="#contact" class="btn">Contact Me</a>
+            <a href="#contact" class="btn"><i class="fas fa-envelope"></i> Contact Me</a>
+            <a href="QHuynh_s_Resume__5_.pdf" class="btn" target="_blank"><i class="fas fa-file-alt"></i> View Resume</a>
         </div>
     </section>
 
@@ -53,16 +54,16 @@
                 </div>
                 <div class="about-info">
                     <div class="info-item">
-                        <strong>Tuổi:</strong> 21
+                        <strong>Age</strong> 21
                     </div>
                     <div class="info-item">
                         <strong>Email:</strong> quochuynh626@gmail.com
                     </div>
                     <div class="info-item">
-                        <strong>SĐT:</strong> 0393 052 250
+                        <strong>Phone:</strong> 0393 052 250
                     </div>
                     <div class="info-item">
-                        <strong>Địa chỉ:</strong> Ho Chi Minh City, Vietnam
+                        <strong>Address:</strong> Ho Chi Minh City, Vietnam
                     </div>
                 </div>
             </div>
@@ -217,11 +218,23 @@
                         <p>Ho Chi Minh City, Vietnam</p>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Họ và tên" required>
-                    <input type="email" placeholder="Email" required>
-                    <textarea rows="5" placeholder="Nội dung tin nhắn" required></textarea>
-                    <button type="submit" class="btn">Send Message</button>
+                <form class="contact-form" id="contactForm" action="#" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                    <div id="formStatus" class="form-status"></div>
                 </form>
             </div>
         </div>
@@ -233,5 +246,69 @@
             <p>&copy; 2026 Nguyen Van Quoc Huynh. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- EmailJS Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Khởi tạo EmailJS với Public Key của bạn
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Thay bằng Public Key của bạn
+        })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formStatus = document.getElementById('formStatus');
+
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Hiển thị trạng thái đang gửi
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                submitBtn.disabled = true;
+                formStatus.innerHTML = '';
+                formStatus.className = 'form-status';
+
+                // Lấy dữ liệu từ form
+                const templateParams = {
+                    from_name: document.getElementById('name').value,
+                    from_email: document.getElementById('email').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value,
+                    to_email: 'quochuynh626@gmail.com' // Email nhận
+                };
+
+                // Gửi email sử dụng EmailJS
+                emailjs.send(
+                    'YOUR_SERVICE_ID', // Service ID
+                    'YOUR_TEMPLATE_ID', // Template ID
+                    templateParams
+                ).then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Hiển thị thông báo thành công
+                    formStatus.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully! I will get back to you soon.';
+                    formStatus.className = 'form-status success';
+                    
+                    // Reset form
+                    contactForm.reset();
+                    
+                    // Khôi phục nút
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    submitBtn.disabled = false;
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Hiển thị thông báo lỗi
+                    formStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to send message. Please try again or contact me directly via email.';
+                    formStatus.className = 'form-status error';
+                    
+                    // Khôi phục nút
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    submitBtn.disabled = false;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
